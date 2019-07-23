@@ -483,4 +483,184 @@ for (var i = 0; i < array.length; i++) {
 var promedio = suma / array.length
 console.log(`En promedio es: ${promedio}`)
 ```
+## Cómo funcionan las clases en JavaScript
+```javascript
+function persona(nombre, apellido, alto) {
+    this.nombre = nombre
+    this.apellido = apellido   
+    this.alto = alto // implicitamente retorna this
+}
+persona.prototype.saludar =  () => {
+    console.log(`hola me llamo ${this.nombre} ${this.apellido}`)
+}
+persona.prototype.soyAlto =  () => this.alto >= 1.7
 
+var sacha = new persona('Ruber', 'Hernandez', 1.9)
+var erika = new persona('erika', 'Hynohaza', 1.5)
+var jenny = new persona('jenny', 'Ordoñez', 1.8)
+
+sacha.soyAlto()
+erika.soyAlto()
+jenny.soyAlto()
+```
+### El contexto de las funciones: quién es this
+Recuerda que dentro de la arrow function, this está haciendo referencia al espacio global, a windows.
+```javascript
+function persona(nombre, apellido, alto) {
+    this.nombre = nombre
+    this.apellido = apellido   
+    this.alto = alto // implicitamente retorna this
+}
+persona.prototype.saludar = function () {
+    console.log(`hola me llamo ${this.nombre} ${this.apellido}`)
+}
+persona.prototype.soyAlto =  function() {
+    
+    return this.alto >= 1.7
+}
+var sacha = new persona('Ruber', 'Hernandez', 1.9)
+var erika = new persona('erika', 'Hynohaza', 1.5)
+var jenny = new persona('jenny', 'Ordoñez', 1.8)
+
+sacha.soyAlto()
+erika.soyAlto()
+jenny.soyAlto()
+```
+
+## La verdad oculta sobre las clases en JavaScript
+Los objetos en JavaScript son “contenedores” dinámicos de propiedades. Estos objetos poseen un enlace a un objeto prototipo. Cuando intentamos acceder a la propiedad de un objeto, la propiedad no sólo se busca en el propio objeto sino también en el prototipo del objeto, en el prototipo del prototipo, y así sucesivamente hasta que se encuentre una propiedad que coincida con el nombre o se alcance el final de la cadena de prototipos.
+```javascript
+function heredaDe(prototipoHijo, prototipoPadre) {
+    var fn = function () {}
+    fn.prototype = prototipoHijo.prototype
+    prototipoHijo.prototype = new fn
+    prototipoHijo.prototype.constructor = prototipoHijo
+}
+function persona(nombre, apellido, alto) {
+    this.nombre = nombre
+    this.apellido = apellido   
+    this.alto = alto // implicitamente retorna this
+}
+persona.prototype.saludar = function () {
+    console.log(`hola me llamo ${this.nombre} ${this.apellido}`)
+}
+persona.prototype.soyAlto =  function() {
+    
+    return this.alto >= 1.7
+}
+function desarrollador(nombre, apellido) {
+    this.nombre = nombre
+    this.apellido = apellido
+}
+heredaDe(desarrollador, persona)
+desarrollador.prototype.saludar = function() {
+    console.log(`hola, me llamo ${this.nombre} ${this.apellido} y soy un desarrolador`)
+}
+// var sacha = new persona('Ruber', 'Hernandez', 1.9)
+// var erika = new persona('erika', 'Hynohaza', 1.5)
+// var jenny = new persona('jenny', 'Ordoñez', 1.8)
+// sacha.soyAlto()
+// erika.soyAlto()
+// jenny.soyAlto()
+```
+## Clases en JavaScriptvar 
+La palabra clave extends se usa en declaraciones de clase o expresiones de clase para crear una clase que es hija de otra clase. El método constructor es un método especial para crear e inicializar un objeto creado a partir de una clase.
+```javascript
+class persona {
+    constructor(nombre, apellido, alto) {
+        this.nombre = nombre
+        this.apellido = apellido
+        this.alto = alto // implicitamente retorna this
+    }
+    saludar(){
+        console.log(`hola me llamo ${this.nombre} ${this.apellido}`)
+    }
+    soyAlto(){
+        return this.alto >= 1.7
+    }
+}
+class Desarrollador extends persona {
+    constructor(nombre, apellido, alto) {
+        super(nombre, apellido, alto) // SUPER  llama al construtor de la clase padre
+        
+    }
+    saludar(){
+        console.log(`hola, me llamo ${this.nombre} ${this.apellido} y soy un desarrolador`)
+
+    }
+}
+```
+##Funciones como parámetros
+```javascript
+class persona {
+    constructor(nombre, apellido, alto) {
+        this.nombre = nombre
+        this.apellido = apellido
+        this.alto = alto // implicitamente retorna this
+    }
+    saludar(fn){
+        var { nombre, apellido } = this
+        console.log(`hola me llamo ${nombre} ${apellido}`)
+        if (fn) {
+            fn(nombre, apellido)            
+        }
+    }
+    soyAlto(){
+        return this.alto >= 1.7
+    }
+}
+class Desarrollador extends persona {
+    constructor(nombre, apellido, alto) {
+        super(nombre, apellido, alto)
+        
+    }
+    saludar(fn){
+        // var nombre = this.nombre
+        // var apellido = this.apellido ---> ser resume:
+        var {nombre, apellido} = this
+        console.log(`hola, me llamo ${nombre} ${apellido} y soy un desarrolador`)
+        if (fn) {
+            fn(nombre, apellido, true)
+        }
+    }
+}
+function responderSaludo(nombre, apellido, esDev) {
+    console.log(`Buen dia ${nombre} ${apellido} y soy un desarrolador`)
+    if (esDev) {
+        console.log(`ah mira , no sabia que eras desarrollador`)        
+    }    
+}
+var sacha = new persona('Ruber', 'Hernandez', 1.9)
+var erika = new persona('erika', 'Hynohaza', 1.5)
+var jenny = new Desarrollador('jenny', 'Ordoñez', 1.8)
+sacha.saludar()
+erika.saludar(responderSaludo)
+jenny.saludar(responderSaludo)
+```
+## Cómo funciona el tiempo en JavaScript
+```javascript
+<title>Cómo funciona el tiempo en JavaScript</title>
+              
+    </head>
+    <body>
+        <script>
+            console.log('a');
+            setTimeout(() => console.log('b'), 0);
+            console.log('c')
+        </script>
+    
+    </body>
+</html>
+```
+```javascript
+```
+```javascript
+```
+```javascript
+```
+```javascript
+```
+```javascript
+```
+```javascript
+```
