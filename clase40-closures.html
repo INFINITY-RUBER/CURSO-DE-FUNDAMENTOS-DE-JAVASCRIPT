@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>clase 39</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <script>
+        function crearSaludo(finalDeFrace) {
+            return function(nombre){
+                console.log(`HOLA ${nombre} ${finalDeFrace}`)
+            }
+        }             
+        const saludoArgentino = crearSaludo('che')
+        const saludoMexico = crearSaludo('guey')
+        const saludoColombia = crearSaludo('vecino')
+        saludoArgentino('ruber')
+        saludoMexico('ruber')
+        saludoColombia('ruber')
+        </script> 
+    
+    </body>
+</html>

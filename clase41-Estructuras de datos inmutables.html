@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>clase 41 Estructuras de datos inmutables</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <script>
+        const sacha = {
+            nombre: 'ruber',
+            apellido: 'hernandez',
+            edad: 28
+            }
+        // const cumpleaños = persona => persona.edad++ //  >>>> esto incrementa al objeto edad de la persona y no queremos eso
+        const cumpleañosInmutable = persona => ({
+            ...persona,
+            edad: persona.edad + 1
+        })
+        </script> 
+    
+    </body>
+</html>

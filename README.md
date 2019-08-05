@@ -652,12 +652,1007 @@ jenny.saludar(responderSaludo)
     </body>
 </html>
 ```
-```javascript
+## Callbacks
+Un callback es una función que se pasa a otra función como un argumento. Esta función se invoca, después, dentro de la función externa para completar alguna acción
+https://code.jquery.com/
+
+```
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>clase 1 variables</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"     
+    </head>
+    <body>  
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>    
+        <script 
+        src="clase28.js">
+        </script>
+    
+    </body>
+</html>
 ```
 ```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+
+const LukeUrl = `${API_URL}${PEOPLE_URL.replace(':id', 1)}`
+const opts = { crossDomain: true }
+
+const onPeopleResponse = function (persona) {
+    console.log(`hola yo soy, ${persona.name} `)
+}
+$.get(LukeUrl, opts, onPeopleResponse )
+```
+## Haciendo múltiples requests
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+const onPeopleResponse = function (persona) {
+    console.log(`hola yo soy, ${persona.name} `)
+}
+function obtenerPersonaje(id) {
+    const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+    $.get(url, opts, onPeopleResponse )    
+}
+obtenerPersonaje(1)
+obtenerPersonaje(2)
+obtenerPersonaje(3)
+```
+## Manejando el Orden y el Asincronismo en JavaScript
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+function obtenerPersonaje(id, callback) {
+    console.log(id)
+    const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+    $.get(url, opts, function (persona) {
+        console.log(`hola yo soy, ${persona.name} `)
+        if (callback) {
+            callback()            
+        }
+    })   
+}
+obtenerPersonaje(1, function () { //  EL INFIERNO DEL CALLBACK 
+    obtenerPersonaje(2, function () {
+        obtenerPersonaje(3, function () {
+            obtenerPersonaje(4, function () {
+                obtenerPersonaje(5, function () {
+                    obtenerPersonaje(6, function () {
+                        obtenerPersonaje(7, function () {
+                            
+                        })
+                    })
+                })
+            })
+        })
+    })
+})
+```
+## Manejo de errores con callbacks
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+function obtenerPersonaje(id, callback) {
+    console.log(id)
+    const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+    $
+    .get(url, opts, callback)
+    .fail( () => {
+        console.log(`Paila tenemos problemas, No se encontro el personaje ${id} `)
+    })
+}
+obtenerPersonaje(1, function (personaje) { //  EL INFIERNO DEL CALLBACK     
+    console.log(`hola yo soy, ${personaje.name} `)    
+    obtenerPersonaje(2, function (personaje) {
+        console.log(`hola yo soy, ${personaje.name} `)
+        obtenerPersonaje(3, function (personaje) {
+            console.log(`hola yo soy, ${personaje.name} `)
+            obtenerPersonaje(4, function (personaje) {
+                console.log(`hola yo soy, ${personaje.name} `)
+                obtenerPersonaje(5, function (personaje) {
+                    console.log(`hola yo soy, ${personaje.name} `)
+                    obtenerPersonaje(6, function (personaje) {
+                        console.log(`hola yo soy, ${personaje.name} `)
+                        obtenerPersonaje(7, function (personaje) {
+                            console.log(`hola yo soy, ${personaje.name} `)                      })  }) }) })})})
+})
+```
+# Promesas
+En esta clase veremos las promesas, que son valores que aun no conocemos. Las promesas tienen tre estados:
+pending
+fullfilled
+rejected
+Las promesas se invocan de la siguiente forma:
+```
+new Promise( ( resolve, reject ) => {
+  // --- llamado asíncrono
+  if( todoOK ) {
+     // -- se ejecutó el llamado exitosamente
+     resolve()
+  } else {
+     // -- hubo un error en el llamado
+     reject()
+  }
+} )
 ```
 ```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+
+function obtenerPersonaje(id) {
+    return new Promise((resolve, reject) => {
+        const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+        $
+            .get(url, opts, function (data) {
+                resolve(data)
+            })
+            .fail(() => reject(id))
+    })    
+}
+function onError(id) {
+    console.log(`sucedio error al obtener el personaje, ${id}`)  
+    
+}
+obtenerPersonaje(1)
+    .then(function (personaje) {
+        console.log(`el personaje 1 es, ${personaje.name} `)  
+
+    })
+    .catch(onError)
 ```
+# Promesas multiples
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+
+function obtenerPersonaje(id) {
+    return new Promise((resolve, reject) => {
+        const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+        $
+            .get(url, opts, function (data) {
+                resolve(data)
+            })
+            .fail(() => reject(id))
+    })    
+}
+function onError(id) {
+    console.log(`sucedio error al obtener el personaje, ${id}`)  
+    
+}
+obtenerPersonaje(1)
+    .then(personaje1 => {
+        console.log(`el personaje 1 es, ${personaje1.name} `)  
+        return obtenerPersonaje(2)
+    })
+    .then(personaje2 => {
+        console.log(`el personaje 2 es, ${personaje2.name} `)  
+        return obtenerPersonaje(3)        
+    })
+    .then(personaje3 => {
+        console.log(`el personaje 3 es, ${personaje3.name} `)
+        return obtenerPersonaje(4)
+    })
+    .then(personaje4 => {
+        console.log(`el personaje 4 es, ${personaje4.name} `)
+        return obtenerPersonaje(5)
+    })
+    .then(personaje5 => {
+        console.log(`el personaje 5 es, ${personaje5.name} `)
+        return obtenerPersonaje(6)
+    })
+    .then(personaje6 => {
+        console.log(`el personaje 6 es, ${personaje6.name} `)
+        return obtenerPersonaje(7)
+    })
+    .then(personaje7 => {
+        console.log(`el personaje 7 es, ${personaje7.name} `)        
+    })
+    .catch(onError)
+```
+# tarea asincrona
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+
+function obtenerPersonaje(id) {
+    return new Promise((resolve, reject) => {
+        const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+        $
+            .get(url, opts, function (data) {
+                resolve(data)
+            })
+            .fail(() => reject(id))
+    })    
+}
+function onError(id) {
+    console.log(`sucedio error al obtener el personaje, ${id}`)  
+    
+}
+var ids = [1, 2, 3, 4, 5, 6, 7]
+// var promesas = ids.map(function(id) {
+//     return obtenerPersonaje(id)
+// }) @funcion ---->
+var promesas = ids.map(id => obtenerPersonaje(id))
+Promise
+    .all(promesas)
+    .then(personajes => console.log(personajes))
+    .catch(onError)
+
+
+```
+## Async-await: lo último en asincronismo:
+Async-await es la manera más simple y clara de realizar tareas asíncronas. Await detiene la ejecución del programa hasta que todas las promesas sean resueltas. Para poder utilizar esta forma, hay que colocar async antes de la definición de la función, y encerrar el llamado a Promises.all() dentro de un bloque try … catch.
+```javascript
+const API_URL = 'https://swapi.co/api/'
+const PEOPLE_URL = 'people/:id'
+const opts = { crossDomain: true }
+
+function obtenerPersonaje(id) {
+    return new Promise((resolve, reject) => {
+        const url = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+        $
+            .get(url, opts, function (data) {
+                resolve(data)
+            })
+            .fail(() => reject(id))
+    })    
+}
+function onError(id) {
+    console.log(`sucedio error al obtener el personaje, ${id}`)  
+    
+}
+async function obtenerPersonajes() { //  asincronismo 
+    var ids = [1, 2, 3, 4, 5, 6, 7]    
+    var promesas = ids.map(id => obtenerPersonaje(id))
+    try {
+        var personajes = await Promise.all(promesas) // await : hasta que no esten todos listos 
+        console.log(personajes)      
+    } catch (id) {
+        onError(id)
+    }   
+}
+obtenerPersonajes()
+```
+## luminando la secuencia de colores
+En esta clase se observa la diferencia entre el uso de let y var para la declaración de variables y cómo esta diferencia afecta el alcance de la variable dentro de un ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+Siempre que sea posible debemos usar const sobre let, y let sobre var.
+```javascript
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <style>
+        body {
+            margin: 0;
+            background: #dedede;
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .gameboard {
+            height: 100vh;
+            width: 100vh;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+            max-height: 60vh;
+            max-width: 60vh;
+        }
+
+        .color {
+            width: 50%;
+            height: 50%;
+            display: inline-block;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: left;
+        }
+
+        .celeste {
+            background: #22a6b3;
+        }
+
+        .celeste.light {
+            background: #7ed6df;
+        }
+
+        .violeta {
+            background: #be2edd;
+        }
+
+        .violeta.light {
+            background: #e056fd;
+        }
+
+        .naranja {
+            background: #f0932b;
+        }
+
+        .naranja.light {
+            background: #ffbe76;
+        }
+
+        .verde {
+            background: #6ab04c;
+        }
+
+        .verde.light {
+            background: #badc58;
+        }
+
+        .btn-start {
+            width: 400px;
+            height: 100px;
+            background: #ecf0f1;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: calc(50% - 200px);
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gameboard">
+        <div id="celeste" class="color celeste left" data-color="celeste"></div>
+        <div id="violeta" class="color violeta right" data-color="violeta"></div>
+        <div id="naranja" class="color naranja left" data-color="naranja"></div>
+        <div id="verde" class="color verde right" data-color="verde"></div>
+        <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+
+        class Juego {
+            constructor() {
+                this.inicializar()
+                this.generarSecuencia()
+                this.siguienteNivel()
+            }
+
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                btnEmpezar.classList.add('hide')
+                this.nivel = 4
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuncia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel(){
+                this.iluminarSecuencia()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+
+            }  //ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, 
+                //ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última
+                //asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+                //Siempre que sea posible debemos usar const sobre let, y let sobre var.
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuncia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+        }
+
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+</body>
+</html>
+```
+## Obteniendo el input del usuario
+Para obtener el input del usuario agregamos un manejador para el evento click del mouse usando addEventListener para cada uno de los colores del juego. Utilizando la propiedad target devuelta por el evento click podemos identificar cuál es el botón que ha sido presionado.
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <link  href="styles-js-proyecto.css" rel="stylesheet">    
+</head>
+<body>
+    <div class="gameboard">
+        <div id="celeste" class="color celeste left" data-color="celeste"></div>
+        <div id="violeta" class="color violeta right" data-color="violeta"></div>
+        <div id="naranja" class="color naranja left" data-color="naranja"></div>
+        <div id="verde" class="color verde right" data-color="verde"></div>
+        <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+
+        class Juego {
+            constructor() {
+                this.inicializar()
+                this.generarSecuencia()
+                this.siguienteNivel()
+            }
+
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                this.elegirColor = this.elegirColor.bind(this)
+                btnEmpezar.classList.add('hide')
+                this.nivel = 4
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuncia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel(){
+                this.iluminarSecuencia()
+                this.agregandoEventosClick()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+
+            }  //ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, 
+                //ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última
+                //asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+                //Siempre que sea posible debemos usar const sobre let, y let sobre var.
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuncia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+            agregandoEventosClick(){
+                this.colores.celeste.addEventListener('click', this.elegirColor)
+                this.colores.verde.addEventListener('click', this.elegirColor)
+                this.colores.violeta.addEventListener('click', this.elegirColor)
+                this.colores.naranja.addEventListener('click', this.elegirColor)
+            }
+            elegirColor(ev){
+                console.log(this)
+            }
+        }
+
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+</body>
+</html>
+```
+## Agregando la verificación del color elegido
+Para agregar atributos al objeto principal en el que está nuestro código, basta con usar this, haciendo referencia al contexto de la clase, y agregar los atributos con un punto: this.atributo = valor
+La verificación del color elegido la haremos creando y removiendo los eventos del click al pasar el juego a cada nuevo nivel.
+```javascript
+<body>
+    <div class="gameboard">
+        <div id="celeste" class="color celeste left" data-color="celeste"></div>
+        <div id="violeta" class="color violeta right" data-color="violeta"></div>
+        <div id="naranja" class="color naranja left" data-color="naranja"></div>
+        <div id="verde" class="color verde right" data-color="verde"></div>
+        <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+        const ULTIMO_NIVEL = 10
+
+        class Juego {
+            constructor() {                
+                this.inicializar()
+                this.generarSecuencia()
+                setTimeout(this.siguienteNivel(), 600)
+                
+            }
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.elegirColor = this.elegirColor.bind(this)
+                btnEmpezar.classList.add('hide')
+                this.nivel = 1
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel() { 
+        //    this.nombreAtributo = 'VALOR' >>> AGREGAR ATRIBUTOS AL OBJETO
+                this.subnivel = 0
+                this.iluminarSecuencia()
+                this.agregandoEventosClick()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+            }
+            tranformarColorANumero(color){
+                switch (color) {
+                    case 'celeste':
+                        return 0                    
+                    case 'vieleta':
+                        return 1                     
+                    case 'naranja' :
+                        return 2                    
+                    case 'verde' :
+                        return 3                
+                }
+            }          
+              
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuencia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+            agregandoEventosClick(){
+                this.colores.celeste.addEventListener('click', this.elegirColor)
+                this.colores.verde.addEventListener('click', this.elegirColor)
+                this.colores.violeta.addEventListener('click', this.elegirColor)
+                this.colores.naranja.addEventListener('click', this.elegirColor)
+            }
+            eliminarEventosClick(){
+                this.colores.celeste.removeEventListener('click', this.elegirColor)
+                this.colores.verde.removeEventListener('click', this.elegirColor)
+                this.colores.violeta.removeEventListener('click', this.elegirColor)
+                this.colores.naranja.removeEventListener('click', this.elegirColor)
+            }
+            elegirColor(ev){                
+                console.log(this)
+                const nombreColor = ev.target.dataset.color
+                const numeroColor = this.tranformarColorANumero(nombreColor)
+                this.iluminarColor(nombreColor)
+                if (numeroColor === this.secuencia[this.subnivel]) {
+                    this.subnivel++
+                    if (this.subnivel === this.nivel) {
+                        this.nivel++
+                        this.eliminarEventosClick()
+                        if (this.nivel === (ULTIMO_NIVEL + 1)) {
+                            // gano
+                        }else {
+                            setTimeout(this.siguienteNivel, 1500)                            
+                        }
+                    }
+                } else {
+                    // perdio
+                }
+            }
+        }
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+</body>
+```
+## Agregando los estados finales del juego
+https://sweetalert.js.org/guides/  Incluiremos una librería de mensajes con estilos mucho más agradables que el mensaje básico de javascript para mostrar los estados finales del juego al usuario.
+```javascript
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- libreria CDN PARA LOS MENSAJES -->
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+        const ULTIMO_NIVEL = 1    
+
+        class Juego {
+            constructor() {  
+                this.inicializar = this.inicializar.bind(this)              
+                this.inicializar()
+                this.generarSecuencia()
+                setTimeout(this.siguienteNivel(), 600)
+                
+            }
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.elegirColor = this.elegirColor.bind(this)
+                this.toggleBtnEmpezar()
+                
+                this.nivel = 1
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            toggleBtnEmpezar(){
+                if (btnEmpezar.classList.contains('hide')) {
+                    btnEmpezar.classList.remove('hide')
+                }else{
+                    btnEmpezar.classList.add('hide')
+                }
+                
+
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel() { 
+        //    this.nombreAtributo = 'VALOR' >>> AGREGAR ATRIBUTOS AL OBJETO
+                this.subnivel = 0
+                this.iluminarSecuencia()
+                this.agregandoEventosClick()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+            }
+            tranformarColorANumero(color){
+                switch (color) {
+                    case 'celeste':
+                        return 0                    
+                    case 'vieleta':
+                        return 1                     
+                    case 'naranja' :
+                        return 2                    
+                    case 'verde' :
+                        return 3                
+                }
+            }
+            
+                //ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, 
+                //ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última
+                //asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+                //Siempre que sea posible debemos usar const sobre let, y let sobre var.
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuencia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+            agregandoEventosClick(){
+                this.colores.celeste.addEventListener('click', this.elegirColor)
+                this.colores.verde.addEventListener('click', this.elegirColor)
+                this.colores.violeta.addEventListener('click', this.elegirColor)
+                this.colores.naranja.addEventListener('click', this.elegirColor)
+            }
+            eliminarEventosClick(){
+                this.colores.celeste.removeEventListener('click', this.elegirColor)
+                this.colores.verde.removeEventListener('click', this.elegirColor)
+                this.colores.violeta.removeEventListener('click', this.elegirColor)
+                this.colores.naranja.removeEventListener('click', this.elegirColor)
+            }
+            elegirColor(ev){                
+                console.log(this)
+                const nombreColor = ev.target.dataset.color
+                const numeroColor = this.tranformarColorANumero(nombreColor)
+                this.iluminarColor(nombreColor)
+                if (numeroColor === this.secuencia[this.subnivel]) {
+                    this.subnivel++
+                    if (this.subnivel === this.nivel) {
+                        this.nivel++
+                        this.eliminarEventosClick()
+                        if (this.nivel === (ULTIMO_NIVEL + 1)) {
+                            this.ganoElJuego()
+                        }else {
+                            setTimeout(this.siguienteNivel, 1500)                            
+                        }
+                    }
+                } else {
+                    this.perdioElJuego()
+                }
+            }
+            ganoElJuego(){
+                swal('Platzi', 'felicitaciones, ganaste el juego!', 'success')
+                .then(this.inicializar)
+            }
+            perdioElJuego(){
+                swal('Platzi', 'Sorry has perdido tio :(', 'error')
+                    .then(() => {
+                        this.eliminarEventosClick()
+                        this.inicializar()
+                    })
+
+            }
+        }
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+```
+## var, let y const: las diferencias entre ellos
+““var”” es la manera más antigua de declarar variables. No es muy estricta en cuanto al alcance, ya que al declarar variables de esta forma, dichas variables podrán ser accedidas, e incluso modificaddas, tanto dentro como fuera de los bloques internos en una función.
+
+Con ““let”” por otra parte, el alcance se reduce al bloque (las llaves) en el cual la variable fue declarada. Fuera de este bloque la variable no existe. Una vez declarada la variable con let, no se puede volver a declarar con en ninguna otra parte de la función.
+
+““const”” al igual que ““let”” se define en el contexto o alcance de un bloque, a diferencia de let y var, las varibles definidas como constantes (const), ya no podrán ser modificadas ni declaradas nuevamente, en ninguna otra parte de la función o el contexto en el que ya existen.
+
+La recomendación es reducir siempre al mínimo el alcance de nuestras variables, por lo que se debe usar let en lugar de var mientras sea posible.
+```javascript
+<script>
+            var sacha = {
+                    nombre: 'sacha',
+                    apellido: 'hernandez',
+                    edad: 28
+            }            
+            function esMayorDeEdad(persona) {
+                 let mensaje, mensaje2
+                if (persona.edad >= 18) {
+                    mensaje = 'es mayor de edad'
+                }else{
+                    mensaje = 'es menor de edad'
+                    // mensaje2 = 'es otro mensaje'
+                }
+                console.log(mensaje)
+                // Console.log(mensaje2)
+            }
+            esMayorDeEdad(sacha)
+            for (let i = 0; i < 10; i++) {
+                console.log(i)                
+            }
+                console.log(`termino el form'${i}`)
+</script>
+```
+¿Hace cuántos días naciste?
+Con variables de tipo Date, se pueden realizar operaciones de suma y resta similares a las que se realizan con números. El resultado que se obtiene está en milisegundos, por lo que luego hay que hacer algunas operaciones adicionales para llevarlos a días, meses o años según queramos. También aplica para Horas, Minutos, Segundos y Milisegundos.
+```javascript
+<body>
+        <script>
+        function diasFechas(fecha1, fecha2) {
+            const unDia_milis = 1000 * 60 * 60 *24
+            const diferencia = Math.abs(fecha1 - fecha2) // devuleve el valor absoluta
+            return Math.floor(diferencia / unDia_milis) // redondear hacia abajo
+        }
+        const hoy = new Date()  
+        const nacimiento = new Date(1981, 02, 12)
+        </script> 
+    
+    </body>
+```
+## Funciones recursivas
+La recursividad es un concepto muy importante en cualquier lenguaje de programación. Una función recursiva es básicamente aquella que se llama (o se ejecuta) a sí misma de forma controlada, hasta que sucede una condición base.
+```javascript
+<script>
+            // division entera
+            // 13 /_4__
+
+            // 13 - 4 = 9   1
+            //  9 - 4 = 5   1
+            //  5 - 4 = 1   1  la division entera es 3  ( 1 1 1)
+            //  1 - 4 = -3    
+            function divisionEntera(dividendo, divisor) {
+                if (dividendo < divisor) {
+                    return 0
+                }
+                return 1 + divisionEntera(dividendo - divisor, divisor)
+            }       
+</script> 
+```
+## Memoización: ahorrando cómputo
+La memoización es una técnica de programación que nos permite ahorrar cómputo o procesamiento en JavaScript, al ir almacenando el resultado invariable de una función para que no sea necesario volver a ejecutar todas las instrucciones de nuevo, cuando se vuelva a llamar con los mismos parámetros. Es similar a usar memoria cache.
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>clase 39</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       
+    </head>
+    <body>
+        <script>             
+            // !6 = 6 * 5 * 4 * 3 * 2 * 1   = 720
+            // !16 = 16 * 15 * 14 ....... 3 * 2 * 1 
+            // !16 = 16 * 15 * 14 ...*!6    
+            function factorial(n) {
+                if (!this.cache) {
+                    this.cache = {}                    
+                }
+                debugger
+                if (this.cache[n]) {
+                    return this.cache[n]
+                }
+
+                if (n === 1) {
+                    return 1
+                }
+                this.cache[n] = n * factorial(n - 1)
+                // return n * factorial(n - 1)
+                debugger
+                return this.cache[n]
+            }    
+        </script> 
+    
+    </body>
+</html>
+```
+## Entiende los closures de JavaScript
+Un closure, básicamente, es una función que recuerda el estado de las variables al momento de ser invocada, y conserva este estado a través de reiteradas ejecuciones. Un aspecto fundamental de los closures es que son funciones que retornan otras funciones.
+```javascript
+ <script>
+        function crearSaludo(finalDeFrace) {
+            return function(nombre){
+                console.log(`HOLA ${nombre} ${finalDeFrace}`)
+            }
+        }             
+        const saludoArgentino = crearSaludo('che')
+        const saludoMexico = crearSaludo('guey')
+        const saludoColombia = crearSaludo('vecino')
+        saludoArgentino('ruber')
+        saludoMexico('ruber')
+        saludoColombia('ruber')
+
+        </script> 
+```
+## Estructuras de datos inmutables
+Las estructuras de datos inmutables forman parte de los principios de la Programación Funcional y nos permiten evitar tener efectos colaterales en los datos. En otras palabras, que hayan modificaciones en las variables sin nuestro consentimiento, produciendo comportamientos inesperados en el programa.
+```javascript
+<script>
+        const sacha = {
+            nombre: 'ruber',
+            apellido: 'hernandez',
+            edad: 28
+            }
+        // const cumpleaños = persona => persona.edad++ //  >>>> esto incrementa al objeto edad de la persona y no queremos eso
+        const cumpleañosInmutable = persona => ({
+            ...persona,
+            edad: persona.edad + 1
+        })
+        </script> 
+```
+## Cambiando de contexto al llamar a una función
+El contexto (o alcance) de una función es por lo general, window. Así que en ciertos casos, cuando intentamos referirnos a this en alguna parte del código, es posible que tengamos un comportamiento inesperado, porque el contexto quizás no sea el que esperamos.
+```javascript
+<script>
+        const ruber = {
+            nombre: 'ruber',
+            apellido: 'hernandez'            
+            }
+        const yeni = {
+                nombre: 'yenifer',
+                apellido: 'hynollazha'
+            }
+        function saludar(saludo = 'Hola') {
+            console.log(`${saludo}, mi nombre es ${this.nombre}`)
+        }
+        // const saludarRuber = saludar.bind(ruber)
+        // const saludaryeni = saludar.bind(yeni)
+
+        // setTimeout(saludar.bind(ruber, 'hola che'), 1000);
+        // saludar.call(ruber, 'hola parce')
+        saludar.apply(ruber, ['hola che'])
+        </script> 
+```
+## Cuándo hace falta poner el punto y coma al final de la línea
+El punto y coma es opcional en JavaScript, excepto en algunos casos:
+Cuando usamos varias instrucciones en una mísma línea
+Al comenzar la próxima línea con un array
+Al comenzar la próxima línea con un template string
 ```javascript
 ```
 ```javascript

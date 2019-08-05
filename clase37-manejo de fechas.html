@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       
+    </head>
+    <body>
+        <script>
+        function diasFechas(fecha1, fecha2) {
+            const unDia_milis = 1000 * 60 * 60 *24
+            const diferencia = Math.abs(fecha1 - fecha2) // devuleve el valor absoluta
+            return Math.floor(diferencia / unDia_milis) // redondear hacia abajo
+        }
+        const hoy = new Date()  
+        const nacimiento = new Date(1981, 02, 12)
+        </script> 
+    
+    </body>
+</html>

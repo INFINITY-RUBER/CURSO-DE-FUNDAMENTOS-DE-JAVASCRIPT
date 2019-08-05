@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       
+    </head>
+    <body>
+        <script>
+            var sacha = {
+                    nombre: 'sacha',
+                    apellido: 'hernandez',
+                    edad: 28
+            }            
+            function esMayorDeEdad(persona) {
+                 let mensaje, mensaje2
+                if (persona.edad >= 18) {
+                    mensaje = 'es mayor de edad'
+                }else{
+                    mensaje = 'es menor de edad'
+                    // mensaje2 = 'es otro mensaje'
+                }
+                console.log(mensaje)
+                // Console.log(mensaje2)
+            }
+            esMayorDeEdad(sacha)
+            for (let i = 0; i < 10; i++) {
+                console.log(i)                
+            }
+                console.log(`termino el form'${i}`)
+        </script>
+    
+    </body>
+</html>

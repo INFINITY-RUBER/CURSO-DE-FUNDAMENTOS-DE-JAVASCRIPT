@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <link  href="styles-js-proyecto.css" rel="stylesheet">    
+</head>
+<body>
+    <div class="gameboard">
+        <div id="celeste" class="color celeste left" data-color="celeste"></div>
+        <div id="violeta" class="color violeta right" data-color="violeta"></div>
+        <div id="naranja" class="color naranja left" data-color="naranja"></div>
+        <div id="verde" class="color verde right" data-color="verde"></div>
+        <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- libreria CDN PARA LOS MENSAJES -->
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+        const ULTIMO_NIVEL = 1    
+
+        class Juego {
+            constructor() {  
+                this.inicializar = this.inicializar.bind(this)              
+                this.inicializar()
+                this.generarSecuencia()
+                setTimeout(this.siguienteNivel(), 600)
+                
+            }
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.elegirColor = this.elegirColor.bind(this)
+                this.toggleBtnEmpezar()
+                
+                this.nivel = 1
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            toggleBtnEmpezar(){
+                if (btnEmpezar.classList.contains('hide')) {
+                    btnEmpezar.classList.remove('hide')
+                }else{
+                    btnEmpezar.classList.add('hide')
+                }
+                
+
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel() { 
+        //    this.nombreAtributo = 'VALOR' >>> AGREGAR ATRIBUTOS AL OBJETO
+                this.subnivel = 0
+                this.iluminarSecuencia()
+                this.agregandoEventosClick()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+            }
+            tranformarColorANumero(color){
+                switch (color) {
+                    case 'celeste':
+                        return 0                    
+                    case 'vieleta':
+                        return 1                     
+                    case 'naranja' :
+                        return 2                    
+                    case 'verde' :
+                        return 3                
+                }
+            }
+            
+                //ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, 
+                //ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última
+                //asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+                //Siempre que sea posible debemos usar const sobre let, y let sobre var.
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuencia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+            agregandoEventosClick(){
+                this.colores.celeste.addEventListener('click', this.elegirColor)
+                this.colores.verde.addEventListener('click', this.elegirColor)
+                this.colores.violeta.addEventListener('click', this.elegirColor)
+                this.colores.naranja.addEventListener('click', this.elegirColor)
+            }
+            eliminarEventosClick(){
+                this.colores.celeste.removeEventListener('click', this.elegirColor)
+                this.colores.verde.removeEventListener('click', this.elegirColor)
+                this.colores.violeta.removeEventListener('click', this.elegirColor)
+                this.colores.naranja.removeEventListener('click', this.elegirColor)
+            }
+            elegirColor(ev){                
+                console.log(this)
+                const nombreColor = ev.target.dataset.color
+                const numeroColor = this.tranformarColorANumero(nombreColor)
+                this.iluminarColor(nombreColor)
+                if (numeroColor === this.secuencia[this.subnivel]) {
+                    this.subnivel++
+                    if (this.subnivel === this.nivel) {
+                        this.nivel++
+                        this.eliminarEventosClick()
+                        if (this.nivel === (ULTIMO_NIVEL + 1)) {
+                            this.ganoElJuego()
+                        }else {
+                            setTimeout(this.siguienteNivel, 1500)                            
+                        }
+                    }
+                } else {
+                    this.perdioElJuego()
+                }
+            }
+            ganoElJuego(){
+                swal('Platzi', 'felicitaciones, ganaste el juego!', 'success')
+                .then(this.inicializar)
+            }
+            perdioElJuego(){
+                swal('Platzi', 'Sorry has perdido tio :(', 'error')
+                    .then(() => {
+                        this.eliminarEventosClick()
+                        this.inicializar()
+                    })
+
+            }
+        }
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+</body>
+</html>

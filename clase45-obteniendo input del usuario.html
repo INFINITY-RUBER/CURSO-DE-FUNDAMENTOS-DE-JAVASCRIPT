@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <link  href="styles-js-proyecto.css" rel="stylesheet">    
+</head>
+<body>
+    <div class="gameboard">
+        <div id="celeste" class="color celeste left" data-color="celeste"></div>
+        <div id="violeta" class="color violeta right" data-color="violeta"></div>
+        <div id="naranja" class="color naranja left" data-color="naranja"></div>
+        <div id="verde" class="color verde right" data-color="verde"></div>
+        <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <script>
+        const celeste = document.getElementById('celeste')
+        const violeta = document.getElementById('violeta')
+        const naranja = document.getElementById('naranja')
+        const verde = document.getElementById('verde')
+        const btnEmpezar = document.getElementById('btnEmpezar')
+
+        class Juego {
+            constructor() {
+                this.inicializar()
+                this.generarSecuencia()
+                this.siguienteNivel()
+            }
+
+            inicializar() {                
+                //                  celeste = celeste  >>> es lo mismo que (celeste,) se asigna la misma variable            
+                this.elegirColor = this.elegirColor.bind(this)
+                btnEmpezar.classList.add('hide')
+                this.nivel = 4
+                this.colores = {
+                    celeste,
+                    violeta,
+                    naranja,
+                    verde
+                }
+            }
+            generarSecuencia(){ 
+                //Math.random() siempre da un numero entre (0 ~ 1)
+                //Math.floot() redondea numero hacia abajo
+                this.secuncia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
+            }
+            siguienteNivel(){
+                this.iluminarSecuencia()
+                this.agregandoEventosClick()
+            }
+            tranformarNumeroAColor(numero){
+                switch (numero) {
+                    case 0:
+                        return 'celeste'                     
+                    case 1:
+                        return 'vieleta'                     
+                    case 2:
+                        return 'naranja'                     
+                    case 3:
+                        return 'verde'                 
+                }
+
+            }  //ciclo for. Se recomienda siempre el uso de let cuando se trata de estructuras for, 
+                //ya que al usar var, el valor de dicha variable se va a remplazar cada vez con la última
+                //asignación que se haga, mientras que con let, conservará su valor dentro de cada iteración.
+                //Siempre que sea posible debemos usar const sobre let, y let sobre var.
+            iluminarSecuencia(){                
+                for (let i = 0; i < this.nivel; i++) {
+                    let color = this.tranformarNumeroAColor(this.secuncia[i])
+                    setTimeout(() => this.iluminarColor(color), 1000 * i)  
+                    console.log(color)     
+                    console.log(i)              
+
+                }
+            }
+            iluminarColor(color){
+                this.colores[color].classList.add('light') // añade un nueva etiqueta de css
+                setTimeout(() => this.apagarColor(color), 350)
+            }
+            apagarColor(color){
+                this.colores[color].classList.remove('light')// quita un nueva etiqueta de css
+            }
+            agregandoEventosClick(){
+                this.colores.celeste.addEventListener('click', this.elegirColor)
+                this.colores.verde.addEventListener('click', this.elegirColor)
+                this.colores.violeta.addEventListener('click', this.elegirColor)
+                this.colores.naranja.addEventListener('click', this.elegirColor)
+            }
+            elegirColor(ev){
+                console.log(this)
+            }
+        }
+
+        function empezarJuego() {
+            // alert('el juego se comienza')
+            window.juego = new Juego()
+        }
+    </script>
+</body>
+</html>
