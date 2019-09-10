@@ -1,14 +1,17 @@
 ##  Variables: Strings
+```javascript
     var nombre = 'Yeniffer', apellido = 'HErnadez'    
     var  nombreMayuscula = nombre.toUpperCase() // cambiar a Mayusculas
     var apellidominuscula = apellido.toLowerCase() // cambiar a minusc    
     var primerletra = nombre.charAt(0) // la primera letra
-    var cantidaletra = nombre.length // total de letra
-    var nombreComple = nombre + ' ' + apellido // concatena
-    var nombreComple2 = `${nombre} ${apellido.toUpperCase()}`  // concatena y mayscula    
+    var cantidaletra = nombre.length // total de letras del string
+    var nombreComple = nombre + ' ' + apellido // concatena string
+    var nombreComple2 = `${nombre} ${apellido.toUpperCase()}`  // interpolar variables y concatena y mayscula    
     var ultimaLetra = nombre.substr(-1, 1) // sacar letras (inic, fin)
-
+```
+_
 ## Variables: Números
+```javascript
     var edad = 27
     var peso = 75
     // edad = edad + 1
@@ -21,13 +24,18 @@
     var precioVino = 200.3
     var total = precioVino * 3
     var total1 = precioVino * 100 * 3 / 100
-    var total2 = Math.round(precioVino * 100 * 3) / 100 // redondea 
+    var total2 = Math.round(precioVino * 100 * 3) / 100 // redondea el numero
     var totalStr = total2.toFixed(2) // pasar a Strin con 2 decimas
     var total3 = parseFloat(totalStr) // pasar de Strin flotante    
     var pizza = 8 
     var person = 2
     var division = pizza / person
+```
 ## 	Funciones
+Las funciones son fracciones de código reutilizable. En esta clase aprenderemos a definir e invocar nuestras funciones. Para definir una función utilizaremos la palabra reservada ““function””.
+Delimitamos el cuerpo de la función usando llaves { }. Los parámetros de la función son variables que se pasan a la función escribíendolos entre paréntesis ()
+Definir funciones nos sirve para reutilizar código. JavaScript es un lenguaje interpretado, esto quiere decir que intentará ejecutar el código sin importar si los parámetros que le pasemos a la función estén invertidos o incluso incompletos.
+```javascript
     var nombre = 'sacha', edad = 28
     function imprimirEdad(n, e) {
         console.log(`${n} tiene ${e} años`)
@@ -39,11 +47,16 @@
     imprimirEdad(25, 'Andre')
     imprimirEdad('Andre')
     imprimirEdad()
+```
+## El alcance de las funciones
+En esta clase hablaremos del alcance que tienen las funciones. Si una variable no está definida dentro del cuerpo de una función hablamos de una variable global. Por el contrario, una variable definida dentro de una función es una variable local.
+Para que la ejecución de una función no modifique una variable global usamos parámetros en lugar de pasar directamente la variable.
+Es posible utilizar el mismo nombre para una variable global y para el parámetro de una función con un alcance local.
 ```javascript
 var nombre = 'Ruber'
 
 function imprimeMAyuscula() {
-    nombre = nombre.toUpperCase()
+    nombre = nombre.toUpperCase() // devuelve en mayusculas
     console.log(nombre)}
 
 imprimeMAyuscula()
@@ -56,6 +69,11 @@ function imprimeMAyuscula2(n) {
 imprimeMAyuscula2(nombre1)
 ```
 ## Objetos
+Vamos a empezar a trabajar con objetos, veremos cómo declararlos, cuáles son sus ventajas, cómo asignarles atributos y cómo trabajar con ellos dentro de las funciones.
+Los objetos se definen delimitados mediante llaves {}
+Un atributo se compone de una clave (key) y un valor (value), que se separan entre sí por dos puntos “”:"". Los valores pueden ser de tipo string, número, booleano, etc. Cada atributo está separado del siguiente por una coma. Un objeto puede tener todos los atributos que sean necesarios.
+Escribir el nombre de un objeto separado por un punto del nombre de un atributo, nos permite acceder al valor de dicho atributo para ese objeto. Un objeto también se puede pasar como atributo en una unción.
+Las últimas versiones de JavaScript nos permiten desglosar el objeto para acceder únicamente al atributo que nos interesa. Esto se consigue encerrando el nombre del atributo entre llaves { 
 ```javascript
 // Objetos
 var sacha = {
@@ -89,6 +107,9 @@ imprimeNombreMayuscula3(dario)
 imprimeNombreMayuscula3({nombre: 'Ruber'})
 ```
 ## Desestructurar objetos
+En esta clase aprenderemos otra forma de acceder a los atributos de los objetos que es la desestructurización de los mismos.
+Para no duplicar las variables introducir el nombre de la variable como parámetro de la segunda variable. Ej var{nombre} = persona
+Reto: resolver la función que está comentada al final del ejercicio.
 ```javascript
     // Desestructurar objetos
     var sacha = {
@@ -120,6 +141,8 @@ imprimeNombreMayuscula3({nombre: 'Ruber'})
     imprimeEdadNombre1(dario)
 ```
 ## 	Parámetros como referencia o como valor
+Javascript se comporta de manera distinta cuando le pasamos un objeto como parámetro.
+Cuando los objetos se pasan como una referencia, estos se modifican fuera de la función. Para solucionar esto se puede crear un objeto diferente. Esto lo podemos hacer colocando tres puntos antes del nombre. Ej …persona.
 ```javascript
     var sacha = {
         nombre: 'Sacha',
