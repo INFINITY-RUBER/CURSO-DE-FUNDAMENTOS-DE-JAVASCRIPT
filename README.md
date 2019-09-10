@@ -141,8 +141,7 @@ Reto: resolver la función que está comentada al final del ejercicio.
     imprimeEdadNombre1(dario)
 ```
 ## 	Parámetros como referencia o como valor
-Javascript se comporta de manera distinta cuando le pasamos un objeto como parámetro.
-Cuando los objetos se pasan como una referencia, estos se modifican fuera de la función. Para solucionar esto se puede crear un objeto diferente. Esto lo podemos hacer colocando tres puntos antes del nombre. Ej …persona.
+Javascript se comporta de manera distinta cuando le pasamos un objeto como parámetro. Cuando los objetos se pasan como una referencia, estos se modifican fuera de la función. Para solucionar esto se puede crear un objeto diferente. Esto lo podemos hacer colocando tres puntos antes del nombre. Ej…persona.
 ```javascript
     var sacha = {
         nombre: 'Sacha',
