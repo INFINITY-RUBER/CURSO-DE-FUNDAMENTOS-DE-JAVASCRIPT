@@ -317,7 +317,7 @@ console.log(`Al inicio de al año ${sacha.nombre} pesa ${sacha.peso} kg`)
 const aumentapeso = persona => persona.peso += INCREMENTO // FUNCION RESUMIDA
 const bajarpeso = persona => persona.peso -= INCREMENTO
 for (var i = 1; i <= AÑO ;  i++){
-    var random = Math.random() // NUMERO ALEATORIO
+    var random = Math.random() // NUMERO ALEATORIO entre  0 y 1
     if (random < 0.25) {
         // aumenta de peso
         aumentapeso(sacha) // LLAMA LA FUNCION Y EL OBJETO       
@@ -424,6 +424,8 @@ for (var i = 0;i < personas.length; i++){
 }
 ```
 ### Filtrar un array 
+En esta clase aprenderemos como filtrar los arrays. Para filtrar siempre necesitamos establecer una condición. En este ejemplo nuestra condición es que la estatura de las personas sea mayor de 1.80mts.
+El método filter ( ) crea una nueva matriz con todos los elementos que pasan la prueba implementada por la función proporcionada. Recuerda que si no hay elementos que pasen la prueba, filter devuelve un array vacío. Reto: escribe el filtrado de personas bajas.
 ```javascript
 // @funcion
 // const esAlta = (persona) => {
