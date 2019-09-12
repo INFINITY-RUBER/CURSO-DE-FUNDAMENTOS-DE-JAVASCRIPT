@@ -508,6 +508,8 @@ var promedio = suma / array.length
 console.log(`En promedio es: ${promedio}`)
 ```
 ## Cómo funcionan las clases en JavaScript
+Las clases de JavaScript son introducidas en el ECMAScript 2015 y son una mejora en la sintaxis sobre la herencia basada en prototipos de JavaScript.
+La palabra clave extends se usa en declaraciones de clase o expresiones de clase para crear una clase que es hija de otra clase. El método constructor es un método especial para crear e inicializar un objeto creado a partir de una clase.
 ```javascript
 function persona(nombre, apellido, alto) {
     this.nombre = nombre
@@ -614,7 +616,7 @@ class Desarrollador extends persona {
     }
 }
 ```
-##Funciones como parámetros
+## Funciones como parámetros
 ```javascript
 class persona {
     constructor(nombre, apellido, alto) {
@@ -662,6 +664,7 @@ erika.saludar(responderSaludo)
 jenny.saludar(responderSaludo)
 ```
 ## Cómo funciona el tiempo en JavaScript
+En principio, cualquier tarea que se haya delegado al navegador a través de un callback, deberá esperar hasta que todas las instrucciones del programa principal se hayan ejecutado. Por esta razón el tiempo de espera definido en funciones como setTimeout,no garantizan que el callback se ejcute en ese tiempo exactamente, sino en cualquier momento a partir de allí, sólo cuando la cola de tareas se haya vaciado.
 ```javascript
 <title>Cómo funciona el tiempo en JavaScript</title>
               
